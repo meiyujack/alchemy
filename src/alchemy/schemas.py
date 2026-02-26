@@ -1,33 +1,43 @@
 from datetime import date
 from uuid import UUID
 
-from pydantic import BaseModel as _BaseModel
+# from pydantic import BaseModel as _BaseModel
+from dataclasses import dataclass
 
-class BaseModel(_BaseModel):
-    """Extend Pydantic's BaseModel to enable ORM mode"""
-    model_config={"from_attributes":True}
-
-class AuthorRead(BaseModel):
-    id:UUID|None
+# class BaseModel(_BaseModel):
+#     """Extend Pydantic's BaseModel to enable ORM mode"""
+#     model_config={"from_attributes":True}
+@dataclass
+class AuthorBase:
     name:str
-    dob:date|None=None
+    dob:date
+
+@dataclass
+class AuthorRead(AuthorBase):
+    id:UUID
     books:list[BookRead]
 
-class AuthorCreate(BaseModel):
-    name:str
-    dob:date|None=None
+@dataclass
+class AuthorCreate(AuthorBase):
+    pass
 
-class AuthorUpdate(BaseModel):
+@dataclass
+class AuthorUpdate:
     name:str|None=None
     dob:date|None=None
 
-class BookRead(BaseModel):
-    id:UUID|None
+@dataclass
+class BookBase:
     title:str
 
-class BookCreate(BaseModel):
-    title:str
+@dataclass
+class BookRead(BookBase):
+    id:UUID
+
+@dataclass
+class BookCreate(BookBase):
     author_id:UUID
 
-class BookUpdate(BaseModel):
-    title:str
+@dataclass
+class BookUpdate(BookBase):
+    pass
